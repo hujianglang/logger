@@ -1,1 +1,33 @@
+源码下logger/test下的“自动化测试”文件可以学习、参考下；
+用法：
+    Logger.clearLogAdapters();
 
+
+    FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
+        .showThreadInfo(false)  // (Optional) Whether to show thread info or not. Default true
+        .methodCount(0)         // (Optional) How many method line to show. Default 2
+        .methodOffset(3)        // (Optional) Skips some method invokes in stack trace. Default 5
+//        .logStrategy(customLog) // (Optional) Changes the log strategy to print out. Default LogCat
+        .tag("My custom tag")   // (Optional) Custom tag for each log. Default PRETTY_LOGGER
+        .build();
+
+    Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy));
+
+    Logger.addLogAdapter(new AndroidLogAdapter() {
+      @Override public boolean isLoggable(int priority, String tag) {
+        return BuildConfig.DEBUG;
+      }
+    });
+    
+        Logger.clearLogAdapters();
+    formatStrategy = PrettyFormatStrategy.newBuilder()
+        .showThreadInfo(false)
+        .methodCount(0)
+        .tag("MyTag")
+        .build();
+    Logger.addLogAdapter(new DiskLogAdapter());
+    Logger.w("my log message with my tag");
+    
+    使用注意：
+    需要设置：Logger.clearLogAdapters();再重新设置LogAdapters类型，如上所示用法，否则可能多次打印日志。
+    
